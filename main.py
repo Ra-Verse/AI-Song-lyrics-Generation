@@ -65,33 +65,33 @@ index_to_char = {i: c for i, c in enumerate(characters)}
 SEQ_LENGTH = 120
 STEP_SIZE = 3
 
-# sentences = []
-# next_characters = []
-#
-# for i in range(0, len(text) - SEQ_LENGTH, STEP_SIZE):
-#     sentences.append(text[i: i + SEQ_LENGTH])
-#     next_characters.append(text[i + SEQ_LENGTH])
-#
-# x = np.zeros((len(sentences), SEQ_LENGTH, len(characters)), dtype=np.uint8)
-# y = np.zeros((len(sentences), len(characters)), dtype=np.uint8)
-#
-# for i, sentence in enumerate(sentences):
-#     for t, char in enumerate(sentence):
-#         x[i, t, char_to_index[char]] = 1
-#     y[i, char_to_index[next_characters[i]]] = 1
-#
-# model = Sequential()
-# model.add(LSTM(256, input_shape=(SEQ_LENGTH, len(characters)), return_sequences=True))  # First LSTM layer
-# model.add(LSTM(128))  # Second LSTM layer
-# model.add(Dense(len(characters)))
-# model.add(Activation('softmax'))
-#
-# model.compile(loss='categorical_crossentropy', optimizer=RMSprop(learning_rate=0.0005))
-# model.fit(x, y, batch_size=256, epochs=3, verbose=4)
-#
-# model.save('model.h5')
+sentences = []
+next_characters = []
 
-model = tf.keras.models.load_model('model.h5')
+for i in range(0, len(text) - SEQ_LENGTH, STEP_SIZE):
+    sentences.append(text[i: i + SEQ_LENGTH])
+    next_characters.append(text[i + SEQ_LENGTH])
+
+x = np.zeros((len(sentences), SEQ_LENGTH, len(characters)), dtype=np.uint8)
+y = np.zeros((len(sentences), len(characters)), dtype=np.uint8)
+
+for i, sentence in enumerate(sentences):
+    for t, char in enumerate(sentence):
+        x[i, t, char_to_index[char]] = 1
+    y[i, char_to_index[next_characters[i]]] = 1
+
+model = Sequential()
+model.add(LSTM(256, input_shape=(SEQ_LENGTH, len(characters)), return_sequences=True))  # First LSTM layer
+model.add(LSTM(128))  # Second LSTM layer
+model.add(Dense(len(characters)))
+model.add(Activation('softmax'))
+
+model.compile(loss='categorical_crossentropy', optimizer=RMSprop(learning_rate=0.0005))
+model.fit(x, y, batch_size=256, epochs=3, verbose=4)
+
+# model.save('model.h5')  # To save Model
+
+# model = tf.keras.models.load_model('model.h5') # To lead the saved model
 
 def generate_text(length, temperature):
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
